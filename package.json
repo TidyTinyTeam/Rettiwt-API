@@ -1,5 +1,5 @@
 {
-	"name": "rettiwt-api",
+	"name": "@tidytiny/rettiwt-api",
 	"version": "4.2.0-alpha.0",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
