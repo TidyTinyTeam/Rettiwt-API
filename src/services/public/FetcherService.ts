@@ -196,6 +196,7 @@ export class FetcherService {
 		config.httpAgent = httpsAgent;
 		config.httpsAgent = httpsAgent;
 		config.timeout = this.timeout;
+		config.withCredentials = true;
 
 		// Sending the request
 		try {

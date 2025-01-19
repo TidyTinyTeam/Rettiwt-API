@@ -1,6 +1,6 @@
 {
 	"name": "@tidytiny/rettiwt-api",
-	"version": "1.0.0",
+	"version": "1.0.8",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"description": "An API for fetching data from TwitterAPI, without any rate limits!",
@@ -13,7 +13,8 @@
 		"format": "prettier --write .",
 		"lint": "eslint --max-warnings 0 .",
 		"docs": "typedoc --excludePrivate --excludeProtected --excludeInternal src/index.ts",
-		"debug": "nodemon ./dist/index.js --inspect=0.0.0.0:9229"
+		"debug": "nodemon ./dist/index.js --inspect=0.0.0.0:9229",
+		"release": "npm publish --access public"
 	},
 	"repository": {
 		"type": "git",
@@ -36,10 +37,12 @@
 		"commander": "11.1.0",
 		"https-proxy-agent": "7.0.2",
 		"rettiwt-auth": "2.1.0",
-		"rettiwt-core": "4.4.0-alpha.1"
+		"rettiwt-core": "4.4.0-alpha.1",
+		"twitter-text": "^3.1.0"
 	},
 	"devDependencies": {
 		"@types/node": "20.4.1",
+		"@types/twitter-text": "^3.1.10",
 		"@typescript-eslint/eslint-plugin": "6.0.0",
 		"@typescript-eslint/parser": "6.0.0",
 		"eslint": "8.44.0",

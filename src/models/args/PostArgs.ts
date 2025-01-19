@@ -9,7 +9,7 @@ import {
 	IsOptional,
 	IsString,
 	Max,
-	MaxLength,
+	// MaxLength,
 	MinDate,
 	validateSync,
 } from 'class-validator';
@@ -193,13 +193,10 @@ export class TweetArgs extends NewTweet {
 
 	/**
 	 * The text for the tweet to be created.
-	 *
-	 * @remarks
-	 * Length of the tweet must be \<= 280 characters.
 	 */
 	@IsNotEmpty({ groups: [EResourceType.TWEET_POST, EResourceType.TWEET_SCHEDULE] })
 	@IsString({ groups: [EResourceType.TWEET_POST, EResourceType.TWEET_SCHEDULE] })
-	@MaxLength(280, { groups: [EResourceType.TWEET_POST, EResourceType.TWEET_SCHEDULE] })
+	// @MaxLength(280, { groups: [EResourceType.TWEET_POST, EResourceType.TWEET_SCHEDULE] })
 	public text: string;
 
 	/**

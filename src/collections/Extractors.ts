@@ -54,7 +54,8 @@ export const extractors = {
 	TWEET_DETAILS_ALT: (response: ITweetRepliesResponse, id: string): Tweet | undefined => Tweet.single(response, id),
 	TWEET_LIKE: (response: ITweetLikeResponse): boolean => (response?.data?.favorite_tweet ? true : false),
 	TWEET_POST: (response: ITweetPostResponse): string =>
-		response?.data?.create_tweet?.tweet_results?.result?.rest_id ?? undefined,
+		response?.data?.create_tweet?.tweet_results?.result?.rest_id ||
+		response?.data?.notetweet_create?.tweet_results?.result?.rest_id as string,
 	TWEET_RETWEET: (response: ITweetRetweetResponse): boolean => (response?.data?.create_retweet ? true : false),
 	TWEET_RETWEETERS: (response: ITweetRetweetersResponse): CursoredData<User> =>
 		new CursoredData<User>(response, EBaseType.USER),
