@@ -36,4 +36,7 @@ export interface IRettiwtConfig {
 
 	/** Optional custom error handler to define error conditions and process API/HTTP errors in responses. */
 	errorHandler?: IErrorHandler;
+
+	/** Use chrome extension cookies for authentication */
+	useChromeExtension?: boolean;
 }

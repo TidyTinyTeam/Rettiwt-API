@@ -4,6 +4,8 @@ import axios from 'axios';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import { Auth, AuthCredential } from 'rettiwt-auth';
 
+
+
 import { allowGuestAuthentication, fetchResources, postResources } from '../../collections/Groups';
 import { requests } from '../../collections/Requests';
 import { EApiErrors } from '../../enums/Api';
@@ -13,6 +15,7 @@ import { FetchArgs } from '../../models/args/FetchArgs';
 import { PostArgs } from '../../models/args/PostArgs';
 import { IErrorHandler } from '../../types/ErrorHandler';
 import { IRettiwtConfig } from '../../types/RettiwtConfig';
+import { ChromeCookieService } from '../internal/ChromeCookieService';
 
 import { ErrorService } from '../internal/ErrorService';
 import { LogService } from '../internal/LogService';
@@ -46,6 +49,9 @@ export class FetcherService {
 	/** The id of the authenticated user (if any). */
 	protected readonly userId?: string;
 
+  private readonly useChromeExtension?: boolean;
+
+
 	/**
 	 * @param config - The config object for configuring the Rettiwt instance.
 	 */
@@ -58,6 +64,7 @@ export class FetcherService {
 		this.proxyUrl = config?.proxyUrl;
 		this.timeout = config?.timeout ?? 0;
 		this.errorHandler = config?.errorHandler ?? new ErrorService();
+		this.useChromeExtension = config?.useChromeExtension;
 	}
 
 	/**
@@ -68,6 +75,9 @@ export class FetcherService {
 	 * @throws An error if not authorized to access the requested resource.
 	 */
 	private checkAuthorization(resource: EResourceType): void {
+    if (this.useChromeExtension) {
+      return;
+    }
 		// Logging
 		LogService.log(ELogActions.AUTHORIZATION, { authenticated: this.userId != undefined });
 
@@ -83,6 +93,13 @@ export class FetcherService {
 	 * @returns The generated AuthCredential
 	 */
 	private async getCredential(): Promise<AuthCredential> {
+    if (this.useChromeExtension) {
+      const headers = await ChromeCookieService.getAuthHeaders();
+      return {
+        toHeader: () => headers
+      } as AuthCredential;
+    }
+
 		if (this.apiKey) {
 			// Logging
 			LogService.log(ELogActions.GET, { target: 'USER_CREDENTIAL' });

@@ -1,6 +1,6 @@
 {
 	"name": "@tidytiny/rettiwt-api",
-	"version": "1.0.8",
+	"version": "1.0.13",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"description": "An API for fetching data from TwitterAPI, without any rate limits!",
@@ -14,7 +14,7 @@
 		"lint": "eslint --max-warnings 0 .",
 		"docs": "typedoc --excludePrivate --excludeProtected --excludeInternal src/index.ts",
 		"debug": "nodemon ./dist/index.js --inspect=0.0.0.0:9229",
-		"release": "npm publish --access public"
+		"release": "yarn build && npm publish --access public"
 	},
 	"repository": {
 		"type": "git",
@@ -51,6 +51,7 @@
 		"nodemon": "2.0.20",
 		"prettier": "3.0.0",
 		"typedoc": "0.24.8",
-		"typescript": "5.1.6"
+		"typescript": "5.1.6",
+    "@types/chrome": "^0.0.270"
 	}
 }
