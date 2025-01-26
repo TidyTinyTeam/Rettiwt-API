@@ -1,6 +1,6 @@
 {
 	"name": "@tidytiny/rettiwt-api",
-	"version": "1.0.13",
+	"version": "1.0.15",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"description": "An API for fetching data from TwitterAPI, without any rate limits!",
@@ -31,7 +31,7 @@
 	"homepage": "https://rishikant181.github.io/Rettiwt-API/",
 	"packageManager": "yarn@4.4.0",
 	"dependencies": {
-		"axios": "1.6.3",
+		"axios": "^1.7.0",
 		"chalk": "4.1.2",
 		"class-validator": "0.14.1",
 		"commander": "11.1.0",
@@ -41,6 +41,7 @@
 		"twitter-text": "^3.1.0"
 	},
 	"devDependencies": {
+		"@types/chrome": "^0.0.270",
 		"@types/node": "20.4.1",
 		"@types/twitter-text": "^3.1.10",
 		"@typescript-eslint/eslint-plugin": "6.0.0",
@@ -51,7 +52,9 @@
 		"nodemon": "2.0.20",
 		"prettier": "3.0.0",
 		"typedoc": "0.24.8",
-		"typescript": "5.1.6",
-    "@types/chrome": "^0.0.270"
+		"typescript": "5.1.6"
+	},
+	"resolutions": {
+		"axios": "^1.7.0"
 	}
 }

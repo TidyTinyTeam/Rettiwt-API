@@ -71,7 +71,13 @@ export class Tweet {
 	/**
 	 * @param tweet - The raw tweet details.
 	 */
-	public constructor(tweet: IRawTweet) {
+	public constructor(tweetObject: IRawTweet | {
+    limitedActionResults: object
+    tweet: IRawTweet
+  }) {
+    // @ts-ignore
+    const tweet = (tweetObject?.tweet ? tweetObject.tweet : tweetObject) as IRawTweet;
+    
 		this.id = tweet.rest_id;
 		this.createdAt = tweet.legacy.created_at;
 		this.tweetBy = new User(tweet.core.user_results.result);
