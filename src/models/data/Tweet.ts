@@ -115,11 +115,13 @@ export class Tweet {
 
 		// Deserializing valid data
 		for (const item of extract) {
-			if (item.tweet_results?.result?.legacy) {
+      // @ts-ignore
+      const tweet = (item.tweet_results?.result?.tweet || item.tweet_results?.result) as IRawTweet
+			if (tweet?.legacy) {
 				// Logging
-				LogService.log(ELogActions.DESERIALIZE, { id: item.tweet_results.result.rest_id });
+				LogService.log(ELogActions.DESERIALIZE, { id: tweet.rest_id });
 
-				tweets.push(new Tweet(item.tweet_results.result));
+				tweets.push(new Tweet(tweet));
 			} else {
 				// Logging
 				LogService.log(ELogActions.WARNING, {
