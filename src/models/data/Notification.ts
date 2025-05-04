@@ -1,61 +1,36 @@
-import {
-	ENotificationType as ENotificationTypeOriginal,
-	INotification,
-	IUserNotifications as IUserNotificationsResponse,
-} from 'rettiwt-core';
-
+import { ENotificationType } from '../../enums/Notification';
+import { ERawNotificationType } from '../../enums/raw/Notification';
 import { findKeyByValue } from '../../helper/JsonUtils';
-
-/**
- * The different types of notifications.
- *
- * @public
- */
-export enum ENotificationType {
-	RECOMMENDATION = 'RECOMMENDATION',
-	INFORMATION = 'INFORMATION',
-	LIVE = 'LIVE',
-	ALERT = 'ALERT',
-	UNDEFINED = 'UNDEFINED',
-}
+import { INotification } from '../../types/data/Notification';
+import { INotification as IRawNotification } from '../../types/raw/base/Notification';
+import { IUserNotificationsResponse } from '../../types/raw/user/Notifications';
 
 /**
  * The details of a single notification.
  *
  * @public
  */
-export class Notification {
-	/** The list of id of the users from whom the notification was received. */
+export class Notification implements INotification {
 	public from: string[];
-
-	/** The id of the notification. */
 	public id: string;
-
-	/** The text contents of the notification. */
 	public message: string;
-
-	/** The date/time at which the notification was received. */
-	public receivedAt: Date;
-
-	/** The list of id of the target tweet(s) of the notification. */
+	public receivedAt: string;
 	public target: string[];
-
-	/** The type of notification. */
 	public type?: ENotificationType;
 
 	/**
 	 * @param notification - The raw notification details.
 	 */
-	public constructor(notification: INotification) {
+	public constructor(notification: IRawNotification) {
 		// Getting the original notification type
-		const notificationType: string | undefined = findKeyByValue(ENotificationTypeOriginal, notification.icon.id);
+		const notificationType: string | undefined = findKeyByValue(ERawNotificationType, notification.icon.id);
 
 		this.from = notification.template?.aggregateUserActionsV1?.fromUsers
 			? notification.template.aggregateUserActionsV1.fromUsers.map((item) => item.user.id)
 			: [];
 		this.id = notification.id;
 		this.message = notification.message.text;
-		this.receivedAt = new Date(Number(notification.timestampMs));
+		this.receivedAt = new Date(Number(notification.timestampMs)).toISOString();
 		this.target = notification.template?.aggregateUserActionsV1?.targetObjects
 			? notification.template.aggregateUserActionsV1.targetObjects.map((item) => item.tweet.id)
 			: [];
@@ -70,8 +45,6 @@ export class Notification {
 	 * @param response - The raw response data.
 	 *
 	 * @returns The deserialized list of notifications.
-	 *
-	 * @internal
 	 */
 	public static list(response: NonNullable<unknown>): Notification[] {
 		const notifications: Notification[] = [];
@@ -82,10 +55,24 @@ export class Notification {
 			for (const [, value] of Object.entries(
 				(response as IUserNotificationsResponse).globalObjects.notifications,
 			)) {
-				notifications.push(new Notification(value as INotification));
+				notifications.push(new Notification(value as IRawNotification));
 			}
 		}
 
 		return notifications;
+	}
+
+	/**
+	 * @returns A serializable JSON representation of `this` object.
+	 */
+	public toJSON(): INotification {
+		return {
+			from: this.from,
+			id: this.id,
+			message: this.message,
+			receivedAt: this.receivedAt,
+			target: this.target,
+			type: this.type,
+		};
 	}
 }

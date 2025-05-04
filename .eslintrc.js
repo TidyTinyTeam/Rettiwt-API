@@ -17,7 +17,7 @@ module.exports = {
 		node: true,
 		jest: true,
 	},
-	ignorePatterns: ['.eslintrc.js'],
+	ignorePatterns: ['.eslintrc.js', 'eslint.config.mjs'],
 	rules: {
 		'@typescript-eslint/no-unsafe-assignment': 'off',
 		'@typescript-eslint/no-unsafe-return': 'off',
@@ -43,6 +43,12 @@ module.exports = {
 			{
 				selector: ['variableLike', 'memberLike'],
 				format: ['camelCase'],
+			},
+			{
+				selector: ['variableLike', 'property'],
+				modifiers: ['private'],
+				format: ['camelCase'],
+				leadingUnderscore: 'require',
 			},
 			{
 				selector: ['variableLike', 'memberLike'],
@@ -87,6 +93,34 @@ module.exports = {
 						'protected-constructor',
 						'public-constructor',
 
+						// GETTERS
+
+						// PRIVATE
+						'private-static-get',
+						'private-get',
+
+						// PROTECTED
+						'protected-static-get',
+						'protected-get',
+
+						// PUBLIC
+						'public-static-get',
+						'public-get',
+
+						// SETTERS
+
+						// PRIVATE
+						'private-static-set',
+						'private-set',
+
+						// PROTECTED
+						'protected-static-set',
+						'protected-set',
+
+						// PUBLIC
+						'public-static-set',
+						'public-set',
+
 						// METHODS
 
 						// PRIVATE
@@ -106,7 +140,7 @@ module.exports = {
 			},
 		],
 		'@typescript-eslint/no-explicit-any': 'warn',
-		'@typescript-eslint/no-inferrable-types': 'off',
+		'@typescript-eslint/no-inferrable-types': 'warn',
 		'tsdoc/syntax': 'warn',
 		'sort-imports': [
 			'warn',

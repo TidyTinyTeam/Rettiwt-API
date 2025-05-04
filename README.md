@@ -4,8 +4,8 @@ A CLI tool and an API for fetching data from Twitter for free!
 
 ## Prerequisites
 
--   NodeJS 20
--   A working Twitter account (optional)
+- NodeJS 20
+- A working Twitter account (optional)
 
 ## Installation
 
@@ -21,48 +21,48 @@ For using the package in your own project, you can install it as a [dependency](
 
 Rettiwt-API can be used with or without logging in to Twitter. As such, the two authentication strategies are:
 
--   'guest' authentication (without logging in) grants access to the following resources/actions:
+- 'guest' authentication (without logging in) grants access to the following resources/actions:
 
-    -   Tweet Details
-    -   User Details (by username)
-    -   User Replies Timeline
-    -   User Timeline
+    - Tweet Details
+    - User Details (by username)
+    - User Replies Timeline
+    - User Timeline
 
--   'user' authentication (logging in) grants access to the following resources/actions:
+- 'user' authentication (logging in) grants access to the following resources/actions:
 
-    -   Tweet Details
-    -   Tweet Like
-    -   Tweet List
-    -   Tweet Media Upload
-    -   Tweet Post
-    -   Tweet Retweet
-    -   Tweet Retweeters
-    -   Tweet Schedule
-    -   Tweet Search
-    -   Tweet Stream
-    -   Tweet Unlike
-    -   Tweet Unpost
-    -   Tweet Unretweet
-    -   User Details (by username or id)
-    -   User Follow
-    -   User Followed Feed
-    -   User Followers
-    -   User Following
-    -   User Highlights
-    -   User Likes
-    -   User Media
-    -   User Notification
-    -   User Recommended Feed
-    -   User Replies Timeline
-    -   User Subscriptions
-    -   User Timeline
-    -   User Unfollow
+    - List Tweets
+    - List Members
+    - Tweet Details
+    - Tweet Like
+    - Tweet Media Upload
+    - Tweet Post
+    - Tweet Retweet
+    - Tweet Retweeters
+    - Tweet Schedule
+    - Tweet Search
+    - Tweet Stream
+    - Tweet Unlike
+    - Tweet Unpost
+    - Tweet Unretweet
+    - User Bookmarks
+    - User Details (by username or id)
+    - User Follow
+    - User Followed Feed
+    - User Followers
+    - User Following
+    - User Highlights
+    - User Likes
+    - User Media
+    - User Notification
+    - User Recommended Feed
+    - User Replies Timeline
+    - User Subscriptions
+    - User Timeline
+    - User Unfollow
 
-By default, Rettiwt-API uses 'guest' authentication. If however, access to the full set of resources is required, 'user' authentication can be used. This is done by using the cookies associated with your Twitter/X account, and encoding them into an `API_KEY` for convenience. For getting the said `API_KEY`, there are two approaches:
+By default, Rettiwt-API uses 'guest' authentication. If however, access to the full set of resources is required, 'user' authentication can be used. This is done by using the cookies associated with your Twitter/X account, and encoding them into an `API_KEY` for convenience. The said `API_KEY` can be obtained by using a browser extension, as follows:
 
-### 1. Using a browser (recommended):
-
-#### A. For Chrome/Chromium-based browsers:
+### A. For Chrome/Chromium-based browsers:
 
 1. Install the [X Auth Helper extension](https://chromewebstore.google.com/detail/x-auth-helper/igpkhkjmpdecacocghpgkghdcmcmpfhp) from the Chrome Web Store, and allow it to run it in incognito mode.
 2. Switch to incognito mode and login to Twitter/X.
@@ -72,7 +72,7 @@ By default, Rettiwt-API uses 'guest' authentication. If however, access to the f
 6. You may close the browser, but don't log out. Remember, since it's incognito mode, you didn't explicity 'log out', so, while the session will be erased from the browser, the `API_KEY` still remains valid.
 7. Save the `API_KEY` for use.
 
-#### B. For Firefox/Firefox-based browsers:
+### B. For Firefox/Firefox-based browsers:
 
 1. Install the [Rettiwt Auth Helper extension](https://addons.mozilla.org/en-US/firefox/addon/rettiwt-auth-helper) from Firefox Add-Ons, and allow it to run it in in-private mode.
 2. Switch to in-private mode and login to Twitter/X.
@@ -84,10 +84,10 @@ By default, Rettiwt-API uses 'guest' authentication. If however, access to the f
 
 #### Notes:
 
--   `API_KEY` created in this way should last 5 years from the date of login, as long as the credentials to the account aren't changed.
--   This approach can also be done without going into incognito/in-private mode, in which case you can either login as usual or skip the login step if you're already logged in, and continue from the steps after login. However, this makes the `API_KEY` to last only as long as the Twitter/X account isn't logged out of (you may exit the browser as usual) or 5 years, whichever comes first. That's why it's recommended to use incognito/in-private mode, so that the `API_KEY` isn't accidentially revoked by logging out.
+- `API_KEY` created in this way should last 5 years from the date of login, as long as the credentials to the account aren't changed.
+- This approach can also be done without going into incognito/in-private mode, in which case you can either login as usual or skip the login step if you're already logged in, and continue from the steps after login. However, this makes the `API_KEY` to last only as long as the Twitter/X account isn't logged out of (you may exit the browser as usual) or 5 years, whichever comes first. That's why it's recommended to use incognito/in-private mode, so that the `API_KEY` isn't accidentially revoked by logging out.
 
-### 2. Using the CLI:
+### 2. Using the CLI (Borked):
 
 1. Open a terminal.
 2. Generate an API_KEY using the command `rettiwt auth login "<email>" "<username>" "<password>"`
@@ -102,33 +102,33 @@ By default, Rettiwt-API uses 'guest' authentication. If however, access to the f
 
 #### Notes:
 
--   The `API_KEY` created in this way expires after one year from the day it was generated.
+- The `API_KEY` created in this way expires after one year from the day it was generated.
 
 ## The API_KEY
 
 The API_KEY generated by logging in is what allows Rettiwt-API to authenticate as a logged in user while interacting with the Twitter API ('user' authentication). As such it is a very sensitive information and therefore, must be stored securely. The following points must be kept in mind while using the API_KEY for 'user' authentication:
 
--   The API_KEY is generated by logging into Twitter using the email, username and password and encoding the returned cookies as a base64 string. This encoded string is the API_KEY.
--   The API_KEY provides the same level of authorization as any standard Twitter account, nothing more, nothing less.
--   Since generation of API_KEY is equivalent to logging in to Twitter, repeated generation attempts might trigger Twitter's anti-bot measures, the same way repeated login attempts do.
--   Therefore, it is recommended to generate the API_KEY only once, then use it every time it is needed.
--   Do not generate an API_KEY if it has not expired yet!
+- The API_KEY is generated by logging into Twitter using the email, username and password and encoding the returned cookies as a base64 string. This encoded string is the API_KEY.
+- The API_KEY provides the same level of authorization as any standard Twitter account, nothing more, nothing less.
+- Since generation of API_KEY is equivalent to logging in to Twitter, repeated generation attempts might trigger Twitter's anti-bot measures, the same way repeated login attempts do.
+- Therefore, it is recommended to generate the API_KEY only once, then use it every time it is needed.
+- Do not generate an API_KEY if it has not expired yet!
 
 ## Notes for non-programmers
 
--   If you have no idea of programming, it's recommended to use the CLI.
--   The CLI provides an easy to use interface which does not require any knowledge of JavaScript or programming
--   Please skip to [CLI-Usage](https://rishikant181.github.io/Rettiwt-API/#md:cli-usage) for details.
+- If you have no idea of programming, it's recommended to use the CLI.
+- The CLI provides an easy to use interface which does not require any knowledge of JavaScript or programming
+- Please skip to [CLI-Usage](https://rishikant181.github.io/Rettiwt-API/#md:cli-usage) for details.
 
 ## Usage as a dependency
 
 Rettiwt-API can be used as a dependency for your NodeJS project. In such a case, it is not required to install Rettiwt-API globally and you may install it locally in the root of your project using the command:
 
--   `npm install --save rettiwt-api` (using npm)
+- `npm install --save rettiwt-api` (using npm)
 
     or
 
--   `yarn add rettiwt-api` (using yarn)
+- `yarn add rettiwt-api` (using yarn)
 
 However, in this case, for accessing the CLI, you will be required to prepend the CLI commands with `npx` in order to tell NodeJS to use the locally installed package.
 
@@ -142,14 +142,14 @@ When used as a dependency, the [Rettiwt](https://rishikant181.github.io/Rettiwt-
 
 A new Rettiwt instance can be initialized using the following code snippets:
 
--   `const rettiwt = new Rettiwt()` (for 'guest' authentication)
--   `const rettiwt = new Rettiwt({ apiKey: API_KEY })` (for 'user' authentication)
+- `const rettiwt = new Rettiwt()` (for 'guest' authentication)
+- `const rettiwt = new Rettiwt({ apiKey: API_KEY })` (for 'user' authentication)
 
 The Rettiwt class has three members:
 
--   `auth` memeber, for managing authentication
--   `tweet` member, for accessing resources related to tweets
--   `user` member, for accessing resources related to users
+- `auth` memeber, for managing authentication
+- `tweet` member, for accessing resources related to tweets
+- `user` member, for accessing resources related to users
 
 For details regarding usage of these members for accessing the Twitter API, refer to [Features](https://rishikant181.github.io/Rettiwt-API/#md:features).
 
@@ -234,7 +234,7 @@ rettiwt.tweet.search({
 });
 ```
 
-### 4. Getting an API_KEY during runtime, using 'user' authentication
+### 4. Getting an API_KEY during runtime, using 'user' authentication (Borked)
 
 Sometimes, you might want to generate an API_KEY on the fly, in situations such as implementing Twitter login in your application. The following example demonstrates how to generate an API_KEY during runtime:
 
@@ -257,9 +257,9 @@ rettiwt.auth.login('<email>', '<username>', '<password>')
 
 Where,
 
--   `<email>` is the email associated with the Twitter account to be logged into.
--   `<username>` is the username associated with the Twitter account.
--   `<password>` is the password to the Twitter account.
+- `<email>` is the email associated with the Twitter account to be logged into.
+- `<username>` is the username associated with the Twitter account.
+- `<password>` is the password to the Twitter account.
 
 ## Using a proxy
 
@@ -284,7 +284,7 @@ This issue can be bypassed by using a proxy only for authentication, using the f
 
 Where,
 
--   `PROXY_URL` is the URL to the proxy server to use.
+- `PROXY_URL` is the URL to the proxy server to use.
 
 Authentication proxy is required only in the following two scenarios:
 
@@ -306,7 +306,7 @@ const rettiwt = new Rettiwt({ apiKey: API_KEY, logging: true });
 
 Rettiwt-API also provides direct access to the raw response data, bypassing any preprocessing by the library itself. This can be achieved by using the [`FetcherService`](https://rishikant181.github.io/Rettiwt-API/classes/FetcherService.html) class instead of the `Rettiwt` class, as demonstrated by the example below, which fetches the raw details of a user with the username 'user1':
 
--   ### JavaScript example:
+- ### JavaScript example:
 
 ```js
 import { FetcherService, EResourceType } from 'rettiwt-api';
@@ -325,7 +325,7 @@ fetcher
 	});
 ```
 
--   ### TypeScript example:
+- ### TypeScript example:
 
 ```ts
 import { FetcherService, EResourceType, IUserDetailsResponse } from 'rettiwt-api';
@@ -352,42 +352,48 @@ So far, the following operations are supported:
 
 ### Authentication
 
--   [Logging in as user](https://rishikant181.github.io/Rettiwt-API/classes/AuthService.html#login)
--   [Logging in as guest](https://rishikant181.github.io/Rettiwt-API/classes/AuthService.html#guest)
+- [Logging in as user](https://rishikant181.github.io/Rettiwt-API/classes/AuthService.html#login)
+- [Logging in as guest](https://rishikant181.github.io/Rettiwt-API/classes/AuthService.html#guest)
+
+### List
+
+- [Getting the members of a given Twitter list](https://rishikant181.github.io/Rettiwt-API/classes/ListService.html#members)
+- [Getting the list of tweets from a given Twitter list](https://rishikant181.github.io/Rettiwt-API/classes/ListService.html#tweets)
 
 ### Tweets
 
--   [Getting the details of a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#details)
--   [Liking a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#like)
--   [Getting the list of tweets from a given Twitter list](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#list)
--   [Posting a new tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#post)
--   [Retweeting a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#retweet)
--   [Getting the list of users who retweeted a given tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#retweeters)
--   [Scheduling a new tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#schedule)
--   [Searching for the list of tweets that match a given filter](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#search)
--   [Streaming filtered tweets in pseudo-realtime](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#stream)
--   [Unliking a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#unlike)
--   [Unposting a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#unpost)
--   [Unretweeting a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#unretweet)
--   [Unscheduling a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#unschedule)
--   [Uploading a media file for a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#upload)
+- [Getting the details of a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#details)
+- [Liking a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#like)
+- [Getting the list of tweets from a given Twitter list](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#list)
+- [Posting a new tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#post)
+- [Retweeting a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#retweet)
+- [Getting the list of users who retweeted a given tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#retweeters)
+- [Scheduling a new tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#schedule)
+- [Searching for the list of tweets that match a given filter](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#search)
+- [Streaming filtered tweets in pseudo-realtime](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#stream)
+- [Unliking a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#unlike)
+- [Unposting a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#unpost)
+- [Unretweeting a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#unretweet)
+- [Unscheduling a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#unschedule)
+- [Uploading a media file for a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#upload)
 
 ### Users
 
--   [Getting the details of a user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#details)
--   [Following a given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#follow)
--   [Getting the followed feed of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#followed)
--   [Getting the list of users who follow the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#followers)
--   [Getting the list of users who are followed by the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#following)
--   [Getting the list of highlighted tweets of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#highlights)
--   [Getting the list of tweets liked by the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#likes)
--   [Getting the media timeline of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#media)
--   [Streaming notifications of the logged-in user in pseudo-realtime](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#notifications)
--   [Getting the recommended feed of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#recommended)
--   [Getting the replies timeline of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#replies)
--   [Getting the list of subscriptions of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#subscriptions)
--   [Getting the tweet timeline of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#timeline)
--   [Unfollowing a given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#unfollow)
+- [Getting the list of tweets bookmarked by the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#bookmarks)
+- [Getting the details of a user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#details)
+- [Following a given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#follow)
+- [Getting the followed feed of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#followed)
+- [Getting the list of users who follow the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#followers)
+- [Getting the list of users who are followed by the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#following)
+- [Getting the list of highlighted tweets of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#highlights)
+- [Getting the list of tweets liked by the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#likes)
+- [Getting the media timeline of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#media)
+- [Streaming notifications of the logged-in user in pseudo-realtime](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#notifications)
+- [Getting the recommended feed of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#recommended)
+- [Getting the replies timeline of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#replies)
+- [Getting the list of subscriptions of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#subscriptions)
+- [Getting the tweet timeline of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#timeline)
+- [Unfollowing a given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#unfollow)
 
 ## CLI Usage
 
@@ -404,8 +410,8 @@ By default, the CLI operates in 'guest' authentication. If you want to use 'user
 
 Help for the CLI can be obtained from the CLI itself:
 
--   For help regarding the available commands, use the command `rettiwt help`
--   For help regarding a specific command, use the command `rettiwt help <command_name>`
+- For help regarding the available commands, use the command `rettiwt help`
+- For help regarding a specific command, use the command `rettiwt help <command_name>`
 
 ## API Reference
 
@@ -413,7 +419,7 @@ The complete API reference can be found at [this](https://rishikant181.github.io
 
 ## Additional information
 
--   This API uses the cookies of a Twitter account to fetch data from Twitter and as such, there is always a chance (although a measly one) of getting the account banned by Twitter algorithm.
+- This API uses the cookies of a Twitter account to fetch data from Twitter and as such, there is always a chance (although a measly one) of getting the account banned by Twitter algorithm.
 
 ## Donation
 

@@ -13,14 +13,38 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 	// Creating the 'user' command
 	const user = createCommand('user').description('Access resources releated to users');
 
+	user.command('bookmarks')
+		.description('Fetch your list of bookmarks')
+		.argument('[count]', 'The number of bookmarks to fetch')
+		.argument('[cursor]', 'The cursor to the batch of bookmarks to fetch')
+		.action(async (count?: string, cursor?: string) => {
+			try {
+				const bookmarks = await rettiwt.user.bookmarks(count ? parseInt(count) : undefined, cursor);
+				output(bookmarks);
+			} catch (error) {
+				output(error);
+			}
+		});
+
 	// Details
 	user.command('details')
 		.description('Fetch the details of the user with the given id/username')
 		.argument('<id>', 'The username/id of the user whose details are to be fetched')
 		.action(async (id: string) => {
 			try {
-				const details = await rettiwt.user.details(id);
-				output(details);
+				// Getting the different IDs
+				const ids: string[] = id.split(',');
+
+				// If single ID given
+				if (ids.length <= 1) {
+					const details = await rettiwt.user.details(ids[0]);
+					output(details);
+				}
+				// If multiple IDs given
+				else {
+					const details = await rettiwt.user.details(ids);
+					output(details);
+				}
 			} catch (error) {
 				output(error);
 			}
