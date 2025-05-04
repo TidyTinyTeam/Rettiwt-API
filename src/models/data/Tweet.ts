@@ -19,6 +19,9 @@ import { User } from './User';
  * @public
  */
 export class Tweet implements ITweet {
+	/** The raw tweet details. */
+	private readonly _raw: IRawTweet;
+
 	public bookmarkCount: number;
 	public conversationId: string;
 	public createdAt: string;
@@ -41,13 +44,8 @@ export class Tweet implements ITweet {
 	/**
 	 * @param tweet - The raw tweet details.
 	 */
-	public constructor(tweetObject: IRawTweet | {
-    limitedActionResults: object
-    tweet: IRawTweet
-  }) {
-    // @ts-ignore
-    const tweet = (tweetObject?.tweet ? tweetObject.tweet : tweetObject) as IRawTweet;
-    
+	public constructor(tweet: IRawTweet) {
+		this._raw = { ...tweet };
 		this.id = tweet.rest_id;
 		this.conversationId = tweet.legacy.conversation_id_str;
 		this.createdAt = new Date(tweet.legacy.created_at).toISOString();
@@ -66,6 +64,11 @@ export class Tweet implements ITweet {
 		this.bookmarkCount = tweet.legacy.bookmark_count;
 		this.retweetedTweet = this.getRetweetedTweet(tweet);
 		this.url = `https://x.com/${this.tweetBy.userName}/status/${this.id}`;
+	}
+
+	/** Get the raw tweet details. */
+	public get raw(): IRawTweet {
+		return { ...this._raw };
 	}
 
 	/**
