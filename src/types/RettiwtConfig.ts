@@ -15,7 +15,7 @@ export interface IRettiwtConfig {
 	 *
 	 * @remarks When deploying to cloud platforms, if setting {@link IRettiwtConfig.authProxyUrl} does not resolve Error 429, then this might be required.
 	 */
-	proxyUrl?: URL;
+	proxyUrl?: string;
 
 	/** The max wait time (in milli-seconds) for a response; if not set, Twitter server timeout is used. */
 	timeout?: number;

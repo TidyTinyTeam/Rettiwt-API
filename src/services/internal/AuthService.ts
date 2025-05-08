@@ -27,10 +27,8 @@ export class AuthService {
 	 * @returns The decoded cookie string.
 	 */
 	public static decodeCookie(encodedCookies: string): string {
-		// Decoding the encoded cookie string
-		const decodedCookies: string = Buffer.from(encodedCookies, 'base64').toString('ascii');
-
-		return decodedCookies;
+		// 使用浏览器的atob函数代替Buffer
+		return atob(encodedCookies);
 	}
 
 	/**
@@ -40,10 +38,8 @@ export class AuthService {
 	 * @returns The encoded cookie string.
 	 */
 	public static encodeCookie(cookieString: string): string {
-		// Encoding the cookie string to base64
-		const encodedCookies: string = Buffer.from(cookieString).toString('base64');
-
-		return encodedCookies;
+		// 使用浏览器的btoa函数代替Buffer
+		return btoa(cookieString);
 	}
 
 	/**
@@ -98,19 +94,21 @@ export class AuthService {
 		// Creating a new blank credential
 		const cred: AuthCredential = new AuthCredential();
 
-		// Getting the guest token
-		await axios
-			.post<{
-				/* eslint-disable @typescript-eslint/naming-convention */
-				guest_token: string;
-				/* eslint-enable @typescript-eslint/naming-convention */
-			}>('https://api.twitter.com/1.1/guest/activate.json', undefined, {
-				headers: cred.toHeader(),
-				httpsAgent: this._config.httpsAgent,
-			})
-			.then((res) => {
-				cred.guestToken = res.data.guest_token;
+		// Getting the guest token using fetch替代axios
+		try {
+			const response = await fetch('https://api.twitter.com/1.1/guest/activate.json', {
+				method: 'POST',
+				headers: cred.toHeader() as any,
+				credentials: 'include'
 			});
+			
+			if (response.ok) {
+				const data = await response.json();
+				cred.guestToken = data.guest_token;
+			}
+		} catch (error) {
+			console.error('Error getting guest token:', error);
+		}
 
 		return cred;
 	}

@@ -1,4 +1,4 @@
-import { statSync } from 'fs';
+// import { statSync } from 'fs';
 
 import { extractors } from '../../collections/Extractors';
 import { EResourceType } from '../../enums/Resource';
@@ -750,7 +750,7 @@ export class TweetService extends FetcherService {
 	/**
 	 * Upload a media file to Twitter.
 	 *
-	 * @param media - The path or ArrayBuffer to the media file to upload.
+	 * @param media - The ArrayBuffer containing the media file to upload.
 	 *
 	 * @returns The id of the uploaded media.
 	 *
@@ -761,24 +761,24 @@ export class TweetService extends FetcherService {
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
-	 * // Uploading a file called mountains.jpg
-	 * rettiwt.tweet.upload('mountains.jpg')
-	 * .then(res => {
-	 * 	console.log(res);
-	 * })
-	 * .catch(err => {
-	 * 	console.log(err);
+	 * // 浏览器环境中从文件上传
+	 * const fileInput = document.getElementById('fileInput');
+	 * fileInput.addEventListener('change', async (e) => {
+	 *   const file = e.target.files[0];
+	 *   const arrayBuffer = await file.arrayBuffer();
+	 *   
+	 *   const mediaId = await rettiwt.tweet.upload(arrayBuffer);
+	 *   console.log(mediaId);
 	 * });
 	 * ```
 	 *
 	 * @remarks
 	 * - The uploaded media exists for 24 hrs within which it can be included in a tweet to be posted.
 	 * If not posted in a tweet within this period, the uploaded media is removed.
-	 * - Instead of a path to the media, an ArrayBuffer containing the media can also be uploaded.
 	 */
-	public async upload(media: string | ArrayBuffer): Promise<string> {
+	public async upload(media: ArrayBuffer): Promise<string> {
 		// INITIALIZE
-		const size = typeof media == 'string' ? statSync(media).size : media.byteLength;
+		const size = media.byteLength;
 		const id: string = (
 			await this.request<IMediaInitializeUploadResponse>(EResourceType.MEDIA_UPLOAD_INITIALIZE, {
 				upload: { size: size },

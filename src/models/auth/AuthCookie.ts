@@ -1,4 +1,4 @@
-import { Cookie } from 'cookiejar';
+import { Cookie } from '../../utils/BrowserCookie';
 
 import { IAuthCookie } from '../../types/auth/AuthCookie';
 

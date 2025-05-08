@@ -27,7 +27,7 @@ program.parse();
 const rettiwt: Rettiwt = new Rettiwt({
 	apiKey: process.env.API_KEY ?? (program.opts().key as string),
 	logging: program.opts().log ? true : false,
-	proxyUrl: program.opts().proxy as URL,
+	proxyUrl: program.opts().proxy,
 	timeout: program.opts().timeout ? Number(program.opts().timeout) : undefined,
 });
 

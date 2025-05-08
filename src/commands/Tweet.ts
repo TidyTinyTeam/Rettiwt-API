@@ -285,18 +285,18 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 		});
 
 	// Upload
-	tweet
-		.command('upload')
-		.description('Upload a media file and returns the alloted id (valid for 24 hrs)')
-		.argument('<path>', 'The path to the media to upload')
-		.action(async (path: string) => {
-			try {
-				const id = await rettiwt.tweet.upload(path);
-				output(id);
-			} catch (error) {
-				output(error);
-			}
-		});
+	// tweet
+	// 	.command('upload')
+	// 	.description('Upload a media file and returns the alloted id (valid for 24 hrs)')
+	// 	.argument('<path>', 'The path to the media to upload')
+	// 	.action(async (path: string) => {
+	// 		try {
+	// 			const id = await rettiwt.tweet.upload(path);
+	// 			output(id);
+	// 		} catch (error) {
+	// 			output(error);
+	// 		}
+	// 	});
 
 	return tweet;
 }

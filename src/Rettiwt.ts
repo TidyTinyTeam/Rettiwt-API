@@ -81,7 +81,7 @@ export class Rettiwt {
 	}
 
 	/** Set the proxy URL for the current instance. */
-	public set proxyUrl(proxyUrl: URL) {
+	public set proxyUrl(proxyUrl: string) {
 		this._config.proxyUrl = proxyUrl;
 	}
 }

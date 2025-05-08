@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rettiwt 扩展</title>
+  <style>
+    body {
+      width: 350px;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 15px;
+    }
+    h1 {
+      font-size: 18px;
+      margin-top: 0;
+      color: #1DA1F2;
+    }
+    .tab-container {
+      margin-bottom: 15px;
+    }
+    .tab-buttons {
+      display: flex;
+      border-bottom: 1px solid #ccc;
+      margin-bottom: 10px;
+    }
+    .tab-button {
+      padding: 8px 15px;
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
+    .tab-button.active {
+      font-weight: bold;
+      border-bottom: 2px solid #1DA1F2;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .form-group {
+      margin-bottom: 10px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    button[type="submit"] {
+      background-color: #1DA1F2;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button[type="submit"]:hover {
+      background-color: #0c8ed9;
+    }
+    .result {
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #f5f8fa;
+      border-radius: 4px;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+    .error {
+      color: #e0245e;
+    }
+    .success {
+      color: #17bf63;
+    }
+  </style>
+</head>
+<body>
+  <h1>Rettiwt API 扩展工具</h1>
+  
+  <div class="tab-container">
+    <div class="tab-buttons">
+      <button class="tab-button active" data-tab="search">搜索</button>
+      <button class="tab-button" data-tab="post">发推</button>
+      <button class="tab-button" data-tab="actions">操作</button>
+    </div>
+    
+    <div class="tab-content active" id="search-tab">
+      <form id="search-form">
+        <div class="form-group">
+          <label for="username">用户名:</label>
+          <input type="text" id="username" placeholder="输入Twitter用户名 (不含@)" required>
+        </div>
+        <div class="form-group">
+          <label for="count">推文数量:</label>
+          <input type="text" id="count" value="10" placeholder="要获取的推文数量">
+        </div>
+        <button type="submit">获取信息</button>
+      </form>
+      <div class="result" id="search-result"></div>
+    </div>
+    
+    <div class="tab-content" id="post-tab">
+      <form id="post-form">
+        <div class="form-group">
+          <label for="tweet-text">推文内容:</label>
+          <textarea id="tweet-text" placeholder="在这里输入推文内容..." required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="media-file">添加媒体 (可选):</label>
+          <input type="file" id="media-file" accept="image/*,video/*">
+        </div>
+        <button type="submit">发送推文</button>
+      </form>
+      <div class="result" id="post-result"></div>
+    </div>
+    
+    <div class="tab-content" id="actions-tab">
+      <form id="action-form">
+        <div class="form-group">
+          <label for="tweet-id">推文ID:</label>
+          <input type="text" id="tweet-id" placeholder="输入推文ID" required>
+        </div>
+        <div class="form-group">
+          <label>选择操作:</label>
+          <div>
+            <input type="radio" id="action-like" name="action" value="like" checked>
+            <label for="action-like">点赞</label>
+            
+            <input type="radio" id="action-retweet" name="action" value="retweet">
+            <label for="action-retweet">转发</label>
+          </div>
+        </div>
+        <button type="submit">执行操作</button>
+      </form>
+      <div class="result" id="action-result"></div>
+    </div>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html> 

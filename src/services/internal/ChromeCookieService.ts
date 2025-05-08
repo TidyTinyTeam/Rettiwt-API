@@ -5,7 +5,7 @@ export class ChromeCookieService {
         const cookieStrings = cookies.map(
           (cookie) => `${cookie.name}=${cookie.value}`
         );
-        resolve(cookieStrings as string[]);
+        resolve(cookieStrings);
       });
     });
   }

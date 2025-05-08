@@ -19,7 +19,7 @@ export const requests: { [key in keyof typeof EResourceType]: (args: IFetchArgs 
 	LIST_MEMBERS: (args: IFetchArgs) => ListRequests.members(args.id!, args.count, args.cursor),
 	LIST_TWEETS: (args: IFetchArgs) => ListRequests.tweets(args.id!, args.count, args.cursor),
 
-	MEDIA_UPLOAD_APPEND: (args: IPostArgs) => MediaRequests.appendUpload(args.upload!.id!, args.upload!.media!),
+	MEDIA_UPLOAD_APPEND: (args: IPostArgs) => MediaRequests.appendUpload(args.upload!.id!, args.upload!.media! as ArrayBuffer),
 	MEDIA_UPLOAD_FINALIZE: (args: IPostArgs) => MediaRequests.finalizeUpload(args.upload!.id!),
 	MEDIA_UPLOAD_INITIALIZE: (args: IPostArgs) => MediaRequests.initializeUpload(args.upload!.size!),
 

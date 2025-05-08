@@ -1,5 +1,8 @@
 import axios from 'axios';
-import { Cookie } from 'cookiejar';
+// import { Cookie } from 'cookiejar';
+
+// 从我们自定义的实现导入Cookie，替代cookiejar
+import { Cookie, parseCookies } from '../../utils/BrowserCookie';
 
 import { allowGuestAuthentication, fetchResources, postResources } from '../../collections/Groups';
 import { requests } from '../../collections/Requests';
@@ -90,22 +93,21 @@ export class FetcherService {
 	 * @returns The generated AuthCredential
 	 */
 	private async getCredential(): Promise<AuthCredential> {
-    if (this.useChromeExtension) {
-      const headers = await ChromeCookieService.getAuthHeaders();
-      return {
-        toHeader: () => headers
-      } as AuthCredential;
-    }
+		if (this.useChromeExtension) {
+			const headers = await ChromeCookieService.getAuthHeaders();
+			return {
+				toHeader: () => headers
+			} as AuthCredential;
+		}
 
+		// 永远不需要走到该逻辑
 		if (this.config.apiKey) {
 			// Logging
 			LogService.log(ELogActions.GET, { target: 'USER_CREDENTIAL' });
 
-			return new AuthCredential(
-				AuthService.decodeCookie(this.config.apiKey)
-					.split(';')
-					.map((item) => new Cookie(item)),
-			);
+			// 使用自定义的parseCookies函数
+			const cookiesArray = parseCookies(AuthService.decodeCookie(this.config.apiKey));
+			return new AuthCredential(cookiesArray);
 		} else {
 			// Logging
 			LogService.log(ELogActions.GET, { target: 'NEW_GUEST_CREDENTIAL' });
@@ -236,8 +238,6 @@ export class FetcherService {
 			...(await this.getTransactionHeader(config.method ?? '', config.url ?? '')),
 			...this.config.headers,
 		};
-		config.httpAgent = this.config.httpsAgent;
-		config.httpsAgent = this.config.httpsAgent;
 		config.timeout = this._timeout;
     config.withCredentials = true;
     config.adapter = 'fetch'
@@ -254,5 +254,54 @@ export class FetcherService {
 			this._errorHandler.handle(error);
 			throw error;
 		}
+	}
+
+	private getRequestHeaders(resource: EResourceType, args?: IFetchArgs | IPostArgs): Headers {
+		const headers = new Headers();
+		
+		// Set default headers
+		headers.append('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36');
+		headers.append('Accept', '*/*');
+		headers.append('Accept-Language', 'en-US,en;q=0.9');
+		
+		// Add custom headers if any
+		if (this.config.headers) {
+			Object.entries(this.config.headers).forEach(([key, value]) => {
+				headers.append(key, value);
+			});
+		}
+		
+		// Add auth credentials if available
+		if (this.config.useChromeExtension) {
+			// 使用Chrome扩展获取认证
+			ChromeCookieService.getAuthHeaders().then(authHeaders => {
+				Object.entries(authHeaders).forEach(([key, value]) => {
+					headers.append(key, value);
+				});
+			});
+		} else if (this.config.apiKey) {
+			// 使用API key认证
+			const authHeader = 'Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA';
+			headers.append('authorization', authHeader);
+			
+			// 获取cookie
+			const cookies = AuthService.decodeCookie(this.config.apiKey);
+			// 使用自定义的Cookie类
+			const cookieObj = Cookie.parse(cookies);
+			
+			// 添加auth token和CSRF token
+			if (cookieObj) {
+				if (cookieObj.properties.auth_token) {
+					headers.append('cookie', `auth_token=${cookieObj.properties.auth_token}`);
+				}
+				if (cookieObj.properties.ct0) {
+					headers.append('x-csrf-token', cookieObj.properties.ct0);
+					headers.append('x-twitter-auth-type', 'OAuth2Session');
+					headers.append('x-twitter-active-user', 'yes');
+				}
+			}
+		}
+		
+		return headers;
 	}
 }

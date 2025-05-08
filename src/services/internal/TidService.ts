@@ -1,6 +1,3 @@
-import axios from 'axios';
-import * as htmlParser from 'node-html-parser';
-
 import { ELogActions } from '../../enums/Logging';
 
 import { calculateClientTransactionIdHeader } from '../../helper/TidUtils';
@@ -19,7 +16,7 @@ import { LogService } from './LogService';
 export class TidService implements ITidProvider {
 	private readonly _cdnUrl: string;
 	private readonly _config: RettiwtConfig;
-	private readonly _requestHeaders: NonNullable<unknown>;
+	private readonly _requestHeaders: Record<string, string>;
 	private _dynamicArgs?: ITidDynamicArgs;
 
 	/**
@@ -51,13 +48,15 @@ export class TidService implements ITidProvider {
 	 */
 	private async getDynamicArgs(): Promise<ITidDynamicArgs> {
 		const html = await this.getHomepageHtml();
-		const root = htmlParser.parse(html);
-		const keyElement = root.querySelector("[name='twitter-site-verification']");
-		const frameElements = root.querySelectorAll("[id^='loading-x-anim']");
+		const parser = new DOMParser();
+		const doc = parser.parseFromString(html, 'text/html');
+		
+		const keyElement = doc.querySelector("[name='twitter-site-verification']");
+		const frameElements = doc.querySelectorAll("[id^='loading-x-anim']");
 
 		return {
 			verificationKey: keyElement?.getAttribute('content') ?? '',
-			frames: frameElements.map((el) => this.parseFrameElement(el)),
+			frames: Array.from(frameElements).map((el) => this.parseFrameElement(el)),
 			indices: await this.getKeyBytesIndices(html),
 		};
 	}
@@ -68,13 +67,12 @@ export class TidService implements ITidProvider {
 	 * @returns The stringified HTML content of the homepage.
 	 */
 	private async getHomepageHtml(): Promise<string> {
-		const response = await axios.get<string>('https://x.com', {
+		const response = await fetch('https://x.com', {
 			headers: this._requestHeaders,
-			httpAgent: this._config.httpsAgent,
-			httpsAgent: this._config.httpsAgent,
+			credentials: 'include'
 		});
 
-		return response.data;
+		return await response.text();
 	}
 
 	private async getKeyBytesIndices(html: string): Promise<number[]> {
@@ -86,18 +84,20 @@ export class TidService implements ITidProvider {
 		}
 
 		const onDemandFileHash = ondemandFileMatch ? ondemandFileMatch[1] : '';
-		const response = await axios.get<string>(`${this._cdnUrl}/ondemand.s.${onDemandFileHash}a.js`, {
-			httpAgent: this._config.httpsAgent,
-			httpsAgent: this._config.httpsAgent,
+		const response = await fetch(`${this._cdnUrl}/ondemand.s.${onDemandFileHash}a.js`, {
+			headers: this._requestHeaders,
+			credentials: 'include'
 		});
-		const match = response.data.matchAll(/(\(\w\[(\d{1,2})],\s*16\))+?/gm);
+		
+		const data = await response.text();
+		const match = data.matchAll(/(\(\w\[(\d{1,2})],\s*16\))+?/gm);
 
 		return Array.from(match).map((m) => Number(m[2]));
 	}
 
-	private parseFrameElement(element: htmlParser.HTMLElement): number[][] {
-		const pathElement = element.children[0].children[1];
-		const value = pathElement.getAttribute('d');
+	private parseFrameElement(element: Element): number[][] {
+		const pathElement = element.querySelector('svg > path');
+		const value = pathElement?.getAttribute('d');
 		if (!value) {
 			return [[]];
 		}
@@ -123,7 +123,7 @@ export class TidService implements ITidProvider {
 
 			const { verificationKey, frames, indices } = this._dynamicArgs;
 
-			return calculateClientTransactionIdHeader({
+			return await calculateClientTransactionIdHeader({
 				keyword: 'obfiowerehiring',
 				method: method,
 				path: path,
@@ -133,7 +133,7 @@ export class TidService implements ITidProvider {
 				extraByte: 3,
 			});
 		} catch {
-			return;
+			return undefined;
 		}
 	}
 

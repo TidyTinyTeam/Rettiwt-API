@@ -1,7 +1,4 @@
-import fs from 'fs';
-
 import { AxiosRequestConfig } from 'axios';
-import FormData from 'form-data';
 
 /**
  * Collection of requests related to media.
@@ -13,9 +10,9 @@ export class MediaRequests {
 	 * @param id - The allocated id of the media item to be uploaded.
 	 * @param media - The media item to upload.
 	 */
-	public static appendUpload(id: string, media: string | ArrayBuffer): AxiosRequestConfig {
+	public static appendUpload(id: string, media: ArrayBuffer): AxiosRequestConfig {
 		const data = new FormData();
-		data.append('media', typeof media == 'string' ? fs.createReadStream(media) : Buffer.from(media));
+		data.append('media', new Blob([media]));
 		return {
 			method: 'post',
 			headers: { referer: 'https://x.com' },

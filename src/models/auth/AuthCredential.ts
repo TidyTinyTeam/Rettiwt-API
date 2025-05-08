@@ -1,6 +1,7 @@
 import { AxiosHeaders, AxiosRequestHeaders } from 'axios';
 
-import { Cookie } from 'cookiejar';
+// 从我们的自定义实现导入Cookie
+import { Cookie } from '../../utils/BrowserCookie';
 
 import { EAuthenticationType } from '../../enums/Authentication';
 import { IAuthCredential } from '../../types/auth/AuthCredential';

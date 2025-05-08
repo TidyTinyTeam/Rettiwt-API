@@ -1,8 +1,8 @@
-import { createHash } from 'node:crypto';
+// import { createHash } from 'node:crypto';
 
 import { ITidParams } from '../types/auth/TidParams';
 
-export function calculateClientTransactionIdHeader(args: ITidParams): string {
+export async function calculateClientTransactionIdHeader(args: ITidParams): Promise<string> {
 	const time = Math.floor(((args.time || Date.now()) - 1682924400 * 1000) / 1000);
 	const timeBuffer = new Uint8Array(new Uint32Array([time]).buffer);
 
@@ -12,8 +12,9 @@ export function calculateClientTransactionIdHeader(args: ITidParams): string {
 	const value = [args.method, args.path, time].join('!') + args.keyword + animationKey;
 	const valueEncoded = new TextEncoder().encode(value);
 
-	const hash = createHash('sha-256').update(valueEncoded).digest();
-	const hashBytes = Array.from(new Uint8Array(hash));
+	// 使用浏览器的Web Crypto API替代Node.js的crypto
+	const hashBuffer = await crypto.subtle.digest('SHA-256', valueEncoded);
+	const hashBytes = Array.from(new Uint8Array(hashBuffer));
 
 	const xorByte = args.xorByte || Math.floor(Math.random() * 256);
 
