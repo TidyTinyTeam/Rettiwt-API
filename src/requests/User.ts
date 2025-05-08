@@ -96,16 +96,18 @@ export class UserRequests {
 	}
 
 	/**
+	 * @param id - The id of the user whose bookmarks are to be fetched.
 	 * @param count - The number of bookmarks to fetch.
 	 * @param cursor - The cursor to the batch of bookmarks to fetch.
 	 */
-	public static bookmarks(count?: number, cursor?: string): AxiosRequestConfig {
+	public static bookmarks(id: string, count?: number, cursor?: string): AxiosRequestConfig {
 		return {
 			method: 'get',
 			url: 'https://x.com/i/api/graphql/-LGfdImKeQz0xS_jjUwzlA/Bookmarks',
 			params: {
 				/* eslint-disable @typescript-eslint/naming-convention */
 				variables: JSON.stringify({
+					userId: id,
 					count: count,
 					cursor: cursor,
 					includePromotedContent: false,

@@ -29,12 +29,25 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 		});
 
 	user.command('bookmarks')
-		.description('Fetch your list of bookmarks')
+		.description('Fetch bookmarks of a user or yourself')
+		.argument('[id]', 'The id of the user (optional, defaults to yourself)')
 		.argument('[count]', 'The number of bookmarks to fetch')
 		.argument('[cursor]', 'The cursor to the batch of bookmarks to fetch')
-		.action(async (count?: string, cursor?: string) => {
+		.action(async (id?: string, count?: string, cursor?: string) => {
 			try {
-				const bookmarks = await rettiwt.user.bookmarks(count ? parseInt(count) : undefined, cursor);
+				// 判断第一个参数是不是数字（代表count）
+				if (id && !isNaN(Number(id))) {
+					// 如果是数字，表示用户没有传 id，而是直接传了 count
+					cursor = count;
+					count = id;
+					id = undefined;
+				}
+				
+				const bookmarks = await rettiwt.user.bookmarks(
+					id, 
+					count ? parseInt(count) : undefined, 
+					cursor
+				);
 				output(bookmarks);
 			} catch (error) {
 				output(error);
@@ -138,12 +151,25 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 
 	// Likes
 	user.command('likes')
-		.description('Fetch your list of liked tweet')
+		.description('Fetch likes of a user or yourself')
+		.argument('[id]', 'The id of the user (optional, defaults to yourself)')
 		.argument('[count]', 'The number of liked tweets to fetch')
 		.argument('[cursor]', 'The cursor to the batch of liked tweets to fetch')
-		.action(async (count?: string, cursor?: string) => {
+		.action(async (id?: string, count?: string, cursor?: string) => {
 			try {
-				const tweets = await rettiwt.user.likes(count ? parseInt(count) : undefined, cursor);
+				// 判断第一个参数是不是数字（代表count）
+				if (id && !isNaN(Number(id))) {
+					// 如果是数字，表示用户没有传 id，而是直接传了 count
+					cursor = count;
+					count = id;
+					id = undefined;
+				}
+				
+				const tweets = await rettiwt.user.likes(
+					id, 
+					count ? parseInt(count) : undefined, 
+					cursor
+				);
 				output(tweets);
 			} catch (error) {
 				output(error);
