@@ -43,14 +43,15 @@ export class UserService extends FetcherService {
 	/**
 	 * Get the list affiliates of a user.
 	 *
-	 * @param id - The id of the target user.
+	 * @param id - The ID of the target user. If no id is provided, the logged-in user's id is used.
 	 * @param count - The number of affiliates to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of affiliates to fetch.
 	 *
 	 * @returns The list of users affiliated to the target user.
 	 *
 	 * @example
-	 * ```
+	 *
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -71,7 +72,7 @@ export class UserService extends FetcherService {
 
 		// Fetching raw list of affiliates
 		const response = await this.request<IUserAffiliatesResponse>(resource, {
-			id: id,
+			id: id ?? this.config.userId,
 			count: count,
 			cursor: cursor,
 		});
@@ -92,7 +93,8 @@ export class UserService extends FetcherService {
 	 * @returns The list of tweets bookmarked by the target user.
 	 *
 	 * @example
-	 * ```
+	 *
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -149,15 +151,19 @@ export class UserService extends FetcherService {
 	/**
 	 * Get the details of a user.
 	 *
-	 * @param id - The username/id(s) of the target user/users. If no ID is provided, uses ID of authenticated user.
+	 * @param id - The username/ID/IDs of the target user/users. If no ID is provided, the logged-in user's ID is used.
 	 *
 	 * @returns
 	 * The details of the given user.
+	 *
+	 * If more than one ID is provided, returns a list.
+	 *
 	 * If no user matches the given id, returns `undefined`.
 	 *
 	 * @example
-	 * Fetching the details using username
-	 * ```
+	 *
+	 * #### Fetching the details of a single user using username
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -174,8 +180,9 @@ export class UserService extends FetcherService {
 	 * ```
 	 *
 	 * @example
-	 * Fetching the details using id
-	 * ```
+	 *
+	 * #### Fetching the details of a single user using ID
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -184,7 +191,25 @@ export class UserService extends FetcherService {
 	 * // Fetching the details of the User with id '1234567890'
 	 * rettiwt.user.details('1234567890')
 	 * .then(res => {
-	 * 	console.log(res);
+	 * 	console.log(res);	# 'res' is a single tweet
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 * * @example
+	 *
+	 * #### Fetching the details of multiple users
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the details of the users with IDs '123', '456', '789'
+	 * rettiwt.user.details(['123', '456', '789'])
+	 * .then(res => {
+	 * 	console.log(res);	# 'res' is an array of users
 	 * })
 	 * .catch(err => {
 	 * 	console.log(err);
@@ -237,14 +262,15 @@ export class UserService extends FetcherService {
 	/**
 	 * Follow a user.
 	 *
-	 * @param id - The id the user to be followed.
+	 * @param id - The ID the user to be followed.
 	 *
 	 * @returns Whether following was successful or not.
 	 *
 	 * @throws Code 108 if given user id is invalid.
 	 *
 	 * @example
-	 * ```
+	 *
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -280,7 +306,8 @@ export class UserService extends FetcherService {
 	 * @returns - The followed feed of the logged-in user.
 	 *
 	 * @example
-	 * ```
+	 *
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -315,14 +342,15 @@ export class UserService extends FetcherService {
 	/**
 	 * Get the list followers of a user.
 	 *
-	 * @param id - The id of the target user.
+	 * @param id - The ID of the target user. If no ID is provided, the logged-in user's ID is used.
 	 * @param count - The number of followers to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of followers to fetch.
 	 *
 	 * @returns The list of users following the target user.
 	 *
 	 * @example
-	 * ```
+	 *
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -338,12 +366,12 @@ export class UserService extends FetcherService {
 	 * });
 	 * ```
 	 */
-	public async followers(id: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+	public async followers(id?: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		const resource = EResourceType.USER_FOLLOWERS;
 
 		// Fetching raw list of followers
 		const response = await this.request<IUserFollowersResponse>(resource, {
-			id: id,
+			id: id ?? this.config.userId,
 			count: count,
 			cursor: cursor,
 		});
@@ -357,14 +385,15 @@ export class UserService extends FetcherService {
 	/**
 	 * Get the list of users who are followed by a user.
 	 *
-	 * @param id - The id of the target user.
+	 * @param id - The ID of the target user. If no ID is provided, the logged-in user's ID is used.
 	 * @param count - The number of following to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of following to fetch.
 	 *
 	 * @returns The list of users followed by the target user.
 	 *
 	 * @example
-	 * ```
+	 *
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -380,12 +409,12 @@ export class UserService extends FetcherService {
 	 * });
 	 * ```
 	 */
-	public async following(id: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+	public async following(id?: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		const resource = EResourceType.USER_FOLLOWING;
 
 		// Fetching raw list of following
 		const response = await this.request<IUserFollowingResponse>(resource, {
-			id: id,
+			id: id ?? this.config.userId,
 			count: count,
 			cursor: cursor,
 		});
@@ -399,14 +428,15 @@ export class UserService extends FetcherService {
 	/**
 	 * Get the highlighted tweets of a user.
 	 *
-	 * @param id - The id of the target user.
+	 * @param id - The ID of the target user. If no ID is provided, the logged-in user's ID is used.
 	 * @param count - The number of followers to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of followers to fetch.
 	 *
 	 * @returns The list of highlighted tweets of the target user.
 	 *
 	 * @example
-	 * ```
+	 *
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -427,7 +457,7 @@ export class UserService extends FetcherService {
 
 		// Fetching raw list of highlights
 		const response = await this.request<IUserHighlightsResponse>(resource, {
-			id: id,
+			id: id ?? this.config.userId,
 			count: count,
 			cursor: cursor,
 		});
@@ -448,7 +478,8 @@ export class UserService extends FetcherService {
 	 * @returns The list of tweets liked by the target user.
 	 *
 	 * @example
-	 * ```
+	 *
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -505,14 +536,15 @@ export class UserService extends FetcherService {
 	/**
 	 * Get the media timeline of a user.
 	 *
-	 * @param id - The id of the target user.
+	 * @param id - The ID of the target user. If no ID is provided, the logged-in user's ID is used.
 	 * @param count - The number of media to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of media to fetch
 	 *
 	 * @returns The media timeline of the target user.
 	 *
 	 * @example
-	 * ```
+	 *
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -528,12 +560,12 @@ export class UserService extends FetcherService {
 	 * });
 	 * ```
 	 */
-	public async media(id: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+	public async media(id?: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		const resource = EResourceType.USER_MEDIA;
 
 		// Fetching raw list of media
 		const response = await this.request<IUserMediaResponse>(resource, {
-			id: id,
+			id: id ?? this.config.userId,
 			count: count,
 			cursor: cursor,
 		});
@@ -552,7 +584,8 @@ export class UserService extends FetcherService {
 	 * @returns An async generator that yields new notifications as they are received.
 	 *
 	 * @example
-	 * ```
+	 *
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -562,7 +595,7 @@ export class UserService extends FetcherService {
 	 * async function streamNotifications() {
 	 * 	try {
 	 * 		// Awaiting for the notifications returned by the AsyncGenerator returned by the method
-	 * 		for await (const notification of rettiwt.user.notifications(1000)) {
+	 * 		for await (const notification of rettiwt.user.notifications(5000)) {
 	 * 			console.log(notification.message);
 	 * 		}
 	 * 	}
@@ -624,7 +657,8 @@ export class UserService extends FetcherService {
 	 * @returns - The recommended feed of the logged-in user.
 	 *
 	 * @example
-	 * ```
+	 *
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -659,14 +693,15 @@ export class UserService extends FetcherService {
 	/**
 	 * Get the reply timeline of a user.
 	 *
-	 * @param id - The id of the target user.
+	 * @param id - The ID of the target user. If no ID is provided, the logged-in user's ID is used.
 	 * @param count - The number of replies to fetch, must be \<= 20.
 	 * @param cursor - The cursor to the batch of replies to fetch.
 	 *
 	 * @returns The reply timeline of the target user.
 	 *
 	 * @example
-	 * ```
+	 *
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -682,14 +717,16 @@ export class UserService extends FetcherService {
 	 * });
 	 * ```
 	 *
-	 * @remarks If the target user has a pinned tweet, the returned reply timeline has one item extra and this is always the pinned tweet.
+	 * @remarks
+	 *
+	 * If the target user has a pinned tweet, the returned reply timeline has one item extra and this is always the pinned tweet.
 	 */
-	public async replies(id: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+	public async replies(id?: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		const resource = EResourceType.USER_TIMELINE_AND_REPLIES;
 
 		// Fetching raw list of replies
 		const response = await this.request<IUserTweetsAndRepliesResponse>(resource, {
-			id: id,
+			id: id ?? this.config.userId,
 			count: count,
 			cursor: cursor,
 		});
@@ -703,14 +740,17 @@ export class UserService extends FetcherService {
 	/**
 	 * Get the list of subscriptions of a user.
 	 *
-	 * @param id - The id of the target user.
+	 * @deprecated Currently not working.
+	 *
+	 * @param id - The ID of the target user. If no ID is provided, the logged-in user's ID is used.
 	 * @param count - The number of subscriptions to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of subscriptions to fetch.
 	 *
 	 * @returns The list of subscriptions by the target user.
 	 *
 	 * @example
-	 * ```
+	 *
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -731,7 +771,7 @@ export class UserService extends FetcherService {
 
 		// Fetching raw list of subscriptions
 		const response = await this.request<IUserSubscriptionsResponse>(resource, {
-			id: id,
+			id: id ?? this.config.userId,
 			count: count,
 			cursor: cursor,
 		});
@@ -745,14 +785,15 @@ export class UserService extends FetcherService {
 	/**
 	 * Get the tweet timeline of a user.
 	 *
-	 * @param id - The id of the target user.
+	 * @param id - The ID of the target user. If no ID is provided, the logged-in user's ID is used.
 	 * @param count - The number of timeline items to fetch, must be \<= 20.
 	 * @param cursor - The cursor to the batch of timeline items to fetch.
 	 *
 	 * @returns The timeline of the target user.
 	 *
 	 * @example
-	 * ```
+	 *
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -769,6 +810,7 @@ export class UserService extends FetcherService {
 	 * ```
 	 *
 	 * @remarks
+	 *
 	 * - If the target user has a pinned tweet, the returned timeline has one item extra and this is always the pinned tweet.
 	 * - If timeline is fetched without authenticating, then the most popular tweets of the target user are returned instead.
 	 */
@@ -777,7 +819,7 @@ export class UserService extends FetcherService {
 
 		// Fetching raw list of tweets
 		const response = await this.request<IUserTweetsResponse>(resource, {
-			id: id,
+			id: id ?? this.config.userId,
 			count: count,
 			cursor: cursor,
 		});
@@ -791,14 +833,13 @@ export class UserService extends FetcherService {
 	/**
 	 * Unfollow a user.
 	 *
-	 * @param id - The id the user to be unfollowed.
+	 * @param id - The ID the user to be unfollowed.
 	 *
 	 * @returns Whether unfollowing was successful or not.
 	 *
-	 * @throws Code 34 if given user id is invalid.
-	 *
 	 * @example
-	 * ```
+	 *
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
